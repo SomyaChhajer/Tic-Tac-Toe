@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic-Tac-Toe Arena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <h1>Tic-Tac-Toe Arena</h1>
+      <p class="subtitle">First to make a line wins the round.</p>
+
+      <div class="scoreboard" aria-label="Scoreboard">
+        <div class="score-card x">
+          <span>Player X</span>
+          <strong id="score-x">0</strong>
+        </div>
+        <div class="score-card draw">
+          <span>Draws</span>
+          <strong id="score-draw">0</strong>
+        </div>
+        <div class="score-card o">
+          <span>Player O</span>
+          <strong id="score-o">0</strong>
+        </div>
+      </div>
+
+      <p id="status" class="status" role="status" aria-live="polite">Player X's turn</p>
+
+      <div class="board" id="board" aria-label="Tic tac toe board">
+        <button class="cell" data-index="0" aria-label="Cell 1"></button>
+        <button class="cell" data-index="1" aria-label="Cell 2"></button>
+        <button class="cell" data-index="2" aria-label="Cell 3"></button>
+        <button class="cell" data-index="3" aria-label="Cell 4"></button>
+        <button class="cell" data-index="4" aria-label="Cell 5"></button>
+        <button class="cell" data-index="5" aria-label="Cell 6"></button>
+        <button class="cell" data-index="6" aria-label="Cell 7"></button>
+        <button class="cell" data-index="7" aria-label="Cell 8"></button>
+        <button class="cell" data-index="8" aria-label="Cell 9"></button>
+      </div>
+
+      <div class="actions">
+        <button id="next-round" class="btn primary">Next Round</button>
+        <button id="restart" class="btn secondary">Restart Match</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
