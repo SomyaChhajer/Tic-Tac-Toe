@@ -1,4 +1,3 @@
-cat > api/login.js << 'EOF'
 import { createClient } from "@libsql/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -39,4 +38,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Server error" });
   }
 }
-EOF

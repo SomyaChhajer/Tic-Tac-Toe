@@ -1,4 +1,3 @@
-cat > api/save-result.js << 'EOF'
 import { createClient } from "@libsql/client";
 import jwt from "jsonwebtoken";
 
@@ -25,7 +24,6 @@ export default async function handler(req, res) {
 
   try {
     if (isDraw) {
-      // For draw, save both players as winner_id (just log it)
       const p1 = await db.execute({
         sql: "SELECT id FROM users WHERE username = ?",
         args: [winnerUsername],
@@ -58,4 +56,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Could not save result" });
   }
 }
-EOF

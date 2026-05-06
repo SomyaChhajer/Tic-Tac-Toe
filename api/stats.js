@@ -1,4 +1,3 @@
-cat > api/stats.js << 'EOF'
 import { createClient } from "@libsql/client";
 import jwt from "jsonwebtoken";
 
@@ -41,4 +40,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Could not fetch stats" });
   }
 }
-EOF
