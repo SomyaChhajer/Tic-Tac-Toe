@@ -1,4 +1,4 @@
-cat > script.js << 'EOF'
+cat > ~/tic-tac-toe-web/script.js << 'EOF'
 // ── AUTH GUARD ────────────────────────────────────────────
 const token = localStorage.getItem('token');
 const loggedInUsername = localStorage.getItem('username');
@@ -52,7 +52,6 @@ async function saveResult(result) {
           winnerUsername: result === 'X' ? playerNames.X : playerNames.O,
           loserUsername:  result === 'X' ? playerNames.O : playerNames.X,
         };
-
     await fetch('/api/save-result', {
       method: 'POST',
       headers: {
@@ -61,13 +60,13 @@ async function saveResult(result) {
       },
       body: JSON.stringify(body),
     });
-    loadStats(); // refresh topbar stats
+    loadStats();
   } catch (e) {
     console.error('Could not save result:', e);
   }
 }
 
-// ── GAME LOGIC (your original code, unchanged) ────────────
+// ── GAME LOGIC ────────────────────────────────────────────
 const cells = Array.from(document.querySelectorAll(".cell"));
 const statusText = document.getElementById("status");
 const nextRoundButton = document.getElementById("next-round");
@@ -125,7 +124,6 @@ function restartMatch() {
 function endRound(result) {
   roundFinished = true;
   for (const cell of cells) cell.disabled = true;
-
   if (result === "draw") {
     scores.draw += 1;
     updateStatus("Draw! Start the next round.");
@@ -134,7 +132,7 @@ function endRound(result) {
     updateStatus(`${playerNames[result]} wins this round! 🎉`);
   }
   updateScores();
-  saveResult(result); // ← save to database
+  saveResult(result);
 }
 
 function handleMove(event) {
