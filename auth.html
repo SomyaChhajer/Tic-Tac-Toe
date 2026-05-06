@@ -1,0 +1,131 @@
+cat > auth.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – Tic-Tac-Toe Arena</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #0f0e17;
+      color: #fffffe;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #1a1a2e;
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+    h1 { font-size: 1.9rem; font-weight: 700; text-align: center; margin-bottom: 6px; }
+    .subtitle { text-align: center; color: #a7a9be; font-size: 0.9rem; margin-bottom: 28px; }
+    .tabs { display: flex; border-radius: 10px; overflow: hidden; border: 1.5px solid #2d2d44; margin-bottom: 24px; }
+    .tab {
+      flex: 1; padding: 11px; text-align: center; cursor: pointer;
+      background: transparent; color: #a7a9be; border: none;
+      font-family: 'Outfit', sans-serif; font-size: 1rem; font-weight: 600;
+      transition: all 0.2s;
+    }
+    .tab.active { background: #e94560; color: #fff; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 0.85rem; color: #a7a9be; margin-bottom: 6px; }
+    input {
+      width: 100%; padding: 12px 14px;
+      border-radius: 10px; border: 1.5px solid #2d2d44;
+      background: #0f0e17; color: #fffffe;
+      font-family: 'Outfit', sans-serif; font-size: 1rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: #e94560; }
+    .error { color: #e94560; font-size: 0.85rem; margin-bottom: 14px; min-height: 20px; }
+    .btn {
+      width: 100%; padding: 13px; border-radius: 10px; border: none;
+      background: #e94560; color: #fff; font-family: 'Outfit', sans-serif;
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+    }
+    .btn:hover { background: #c73652; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎮 Tic-Tac-Toe Arena</h1>
+    <p class="subtitle">Login or sign up to track your wins & losses</p>
+    <div class="tabs">
+      <button class="tab active" id="tab-login" onclick="switchTab('login')">Login</button>
+      <button class="tab" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div id="error" class="error"></div>
+    <div class="field">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter username" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" />
+    </div>
+    <button class="btn" id="submitBtn" onclick="handleSubmit()">Login</button>
+  </div>
+  <script>
+    let currentTab = 'login';
+    if (localStorage.getItem('token')) window.location.href = '/index.html';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+      document.getElementById('submitBtn').textContent = tab === 'login' ? 'Login' : 'Create Account';
+      document.getElementById('error').textContent = '';
+    }
+
+    document.getElementById('password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSubmit();
+    });
+
+    async function handleSubmit() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const errorEl = document.getElementById('error');
+      const btn = document.getElementById('submitBtn');
+      errorEl.textContent = '';
+
+      if (!username || !password) {
+        errorEl.textContent = 'Please fill in all fields.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Please wait...';
+
+      try {
+        const endpoint = currentTab === 'login' ? '/api/login' : '/api/register';
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) { errorEl.textContent = data.error || 'Something went wrong.'; return; }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('username', data.username);
+        window.location.href = '/index.html';
+      } catch {
+        errorEl.textContent = 'Network error. Please try again.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = currentTab === 'login' ? 'Login' : 'Create Account';
+      }
+    }
+  </script>
+</body>
+</html>
+EOF
